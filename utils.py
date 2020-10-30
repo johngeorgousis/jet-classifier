@@ -84,13 +84,15 @@ def preprocess(event1):
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def plot_events(df1, R=1.5, pixels=60, title='(φ\', η\') ∈ [-R, R]',  ylabel='η\'', xlabel='φ\''):
+def plot_events(df1, R=1.5, pixels=60, title='(φ\', η\') ∈ [-R, R]',  ylabel='η\'', xlabel='φ\'', df=False):
     
     '''
     Displays an image of single event, or multiple events (input can be either Series or DataFrame). If DataFrame, then average image is created.  
     
     Input: dataframe (multiple events)
     Output: null, just plots image
+    
+    df: if df=True, then display the image as a DataFrame as well
     '''
     
     # Create copy of df so that it's not accidentally modified
@@ -131,6 +133,9 @@ def plot_events(df1, R=1.5, pixels=60, title='(φ\', η\') ∈ [-R, R]',  ylabel
 
     # Convert to DataFrame
     bins = pd.DataFrame(bins)
+    
+    if df:
+        display(bins)
 
     # Plot Heat Map
     sns.heatmap(bins)
