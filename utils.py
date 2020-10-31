@@ -34,7 +34,6 @@ def preprocessdf(df):
     df1 = df.copy(deep=True)
     
     # Extract constituents column
-    const = df1['Const']
     # Drop constituents from df
     df1 = df1.drop('Const', axis=1)
     
@@ -65,9 +64,9 @@ def preprocess(event1):
     event = event1.copy(deep=True)
     
     # Extract constituents 
-    const = event['Const']
+    #const = event['Const']
     # Drop constituents from row
-    event = event.drop(labels='Const')
+    event = event.drop(event.index[0])
     
     # Replace NaN with 0
     event = event.fillna(0)
