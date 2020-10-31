@@ -34,8 +34,8 @@ from skimage import data, img_as_float
 #         event = preprocess(event)                   # Preprocess
 #         max123 = extract_max123(event)              # Extract maxima
 #         event = center(event, max123)               # Center 
-#         #event = rotate(event, max123)              # Rotate 
-#         #event = flip(event, max123)                # Flip 
+#         #event = rotate(event, max123)               # Rotate 
+#         #event = flip(event, max123)                 # Flip 
 #         event = create_image(event, pixels=pixels)  # Create image
 #         image += event                              # Add event image to average image
 #         event = max123 = None                       # Delete from memory
