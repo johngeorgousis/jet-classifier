@@ -17,9 +17,39 @@ from skimage import data, img_as_float
 
 
 
+##### CODE TO DISPLAY IMAGE FOR MULTIPLE EVENTS (READ FROM FILE)
+
+# pixels = 100                                        # Image Resolution, int.
+# frequency = [1, 100, 500, 3000, 8000, 12000]        # Image Display Frequency (display at no. of samples in list)
+# image = np.zeros((pixels, pixels))                  # Define initial image
+# a = 0                                               # Define Counter
+
+
+
+# with open("tth_semihad.dat") as infile:
+#     for line in infile:
+        
+#         event=line.strip().split()
+#         event = pd.Series(event)                    # Turn into Series
+#         event = preprocess(event)                   # Preprocess
+#         max123 = extract_max123(event)              # Extract maxima
+#         event = center(event, max123)               # Center 
+#         #event = rotate(event, max123)              # Rotate 
+#         #event = flip(event, max123)                # Flip 
+#         event = create_image(event, pixels=pixels)  # Create image
+#         image += event                              # Add event image to average image
+#         event = max123 = None                       # Delete from memory
+        
+#         a += 1
+#         if a in frequency:
+#             sns.heatmap(image, robust=True)
+#             plt.show()
+
+
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def preprocessdf(df):
+def preprocessdf(df1):
     '''
     -Extracts no. of constituents
     -Drops constituents column
@@ -31,19 +61,21 @@ def preprocessdf(df):
     '''
     
     # Create df copy
-    df1 = df.copy(deep=True)
+    df = df1.copy(deep=True)
     
     # Extract constituents column
+    df = df['Const']
+    
     # Drop constituents from df
-    df1 = df1.drop('Const', axis=1)
+    df = df.drop('Const', axis=1)
     
     # Replace NaN with 0
-    df1 = df1.fillna(0)
+    df = df.fillna(0)
 
     # Convert values to floats
-    df1 = df1.astype(float)
+    df = df.astype(float)
     
-    return df1, const
+    return df, const
 
 # Create Preprocessed DF
 #mydata_prep = preprocessdf(mydata)[0]
@@ -223,6 +255,33 @@ def extract_max123(event1):
 
 
     return row_max1, row_max2, row_max3
+
+
+##### Create DF
+# maxpt1 = []
+# maxpt2 = []
+# maxpt3 = []
+
+# start = time.time()
+
+# # For all events, add maxima to & coordinates to list
+# for i in range(events):
+#     maxpt1.append(extract_max123(mydata_prep.iloc[i])[0])
+#     maxpt2.append(extract_max123(mydata_prep.iloc[i])[1])
+#     maxpt3.append(extract_max123(mydata_prep.iloc[i])[2])
+    
+# # Turn lists into DataFrames
+# max1 = pd.DataFrame(maxpt1)
+# max2 = pd.DataFrame(maxpt2)
+# max3 = pd.DataFrame(maxpt3)
+
+# # Create list of DataFrames containing all df for the 3 maxima
+# max123 = [max1, max2, max3]
+
+# end = time.time()
+# print('Time taken: {0:.2f}s'.format(end-start))
+
+
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -462,6 +521,25 @@ def center(event1, max123, output='event', R=1.5, pixels=60):
         
         return image
     
+    
+    
+   ##### CREATE DF 
+# ### φ, η transform all events
+# centered = []
+
+# start = time.time()
+
+# # Create matrix of transformed events
+# for i in range(events):
+    
+#     centered.append(center(mydata_prep.iloc[i], max123, output='event'))
+    
+# end = time.time()
+
+# # Turn matrix into DataFrame
+# mydata_centered = pd.DataFrame(centered)
+
+# print('Time taken to centre image: {0:.2f}s'.format(end-start))
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
