@@ -3,17 +3,10 @@ import scipy as sp
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-
-
-from IPython.display import display
 import time
+from IPython.display import display
 
-# Possibly Redundant
-from scipy import ndimage, misc
-from skimage.feature import peak_local_max
-from skimage import data, img_as_float
-
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 def preprocess(event1):
     '''
