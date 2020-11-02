@@ -15,6 +15,78 @@ from skimage import data, img_as_float
 
 
 
+
+# ### 🔴 (Sidetrack) Normalise/Log pT (Still doesn't work without robust)
+# Note: the log transformation can simply be done on the final ndarray and it's much more efficient (and doesnt require a function)
+
+# Also tried normalising the whole image using image /= np.amax(image) and results were even worse. **Though this might be a good form to feed it to the algorithm in**
+
+def normalise_p(event1):
+    # Define p indices to be used later
+    p_indices = event1[2::3].index
+
+    # Create copy of event
+    event = event1.copy(deep=True)
+
+    # Calculate sum (only for normalisation)
+    total_p = 0
+    for p_index in p_indices:
+        total_p += event.iloc[2::3][p_index]
+    
+    # For all p in the event
+    for p_index in p_indices:             
+
+        # Define Useful Quantities
+        num_index = event.name                   
+        
+        # p Normalisation
+        event.iloc[2::3][p_index] /= total_p                                         # Normalise
+        #event.iloc[2::3][p_index] = math.log(event.iloc[2::3][p_index], 10)         # Log Transform
+
+        
+#     if output == 'event':
+#         return event
+    return event
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def preprocessdf(df1):
     '''
     -Extracts no. of constituents

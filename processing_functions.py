@@ -44,20 +44,23 @@ def preprocess(event1):
 def create_image(event1, R=1.5, pixels=60):
     
     '''
+    FIRST STEPS (BEFORE BINNING) NEED RETHINKING (based on whether expected input is list-like vector, Series, or DataFrame)
+    
     Creates an image of single event, or multiple events (input can be either Series or DataFrame). If DataFrame, then average image is created.  
     
-    Input: series
+    Input: vector (event)
     Output: array
     
     table: if df=True, then display the image as a DataFrame as well
     '''
     
-    # Create copy of df so that it's not accidentally modified
-    event = event1.copy(deep=True)
+    # Turn into pd.Series
+    #event = pd.Series(event1)
+    event = pd.DataFrame(event1).T
     
     # If input is Series (single event) then turn into DataFrame. This makes it so that single events are processed correctly
-    if isinstance(event, pd.Series):
-        event = pd.DataFrame(event).T
+#     if isinstance(event, pd.Series):
+#         event = pd.DataFrame(event).T
 
     # Initiate bin lists
     bin_h = []
@@ -131,7 +134,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                #event = normalise_p(event)                       # Normalise pT's
+#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
@@ -158,7 +161,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                #event = normalise_p(event)                       # Normalise pT's
+#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
@@ -191,7 +194,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                #event = normalise_p(event)                       # Normalise pT's
+#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
