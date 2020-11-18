@@ -86,16 +86,15 @@ def test(event, pixels=60, R=1.5, display=False):
 
     image = np.zeros((pixels, pixels))
     
-    event = pd.Series(event)
-    event = preprocess(event)
-    max123, f_id_2 = extract_max123(event)
-    event = center(event, max123)
-    
-    event = create_image(event, pixels=pixels, R=R)
-    event = pd.DataFrame(event)
-    event = rotate(event, f_id_2)
-    event = nd.array(event)
-    image += event
+    event = pd.Series(event)                         # Turn into Series
+    event = preprocess(event)                        # Preprocess
+    max123 = extract_max123(event)                   # Extract maxima
+    event = center(event, max123)                    # Center 
+    #event = rotate(event, max123)                   # Rotate 
+    #event = flip(event, max123)                     # Flip 
+    event = create_image(event, pixels=pixels, R=R)  # Create image
+    image += event                                   # Add event image to average image
+    #image /= np.amax(image)                          # Normalise final image between 0 and 1
    
     
     if display:
@@ -103,11 +102,6 @@ def test(event, pixels=60, R=1.5, display=False):
         return None
     
     return image    
-
-
-
-
-
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -147,14 +141,12 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
                 #event = flip(event, max123)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
-                #image = np.log(image)                            # Log transform pT's for smaller numbers
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
                 event = max123 = None                            # Delete from memory
 
@@ -174,14 +166,12 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
                 #event = flip(event, max123)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
-                #image = np.log(image)                            # Log transform pT's for smaller numbers
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
                 event = max123 = None                            # Delete from memory
 
@@ -207,14 +197,12 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-#see utils_old  #event = normalise_p(event)                       # Normalise pT's
                 max123 = extract_max123(event)                   # Extract maxima
                 event = center(event, max123)                    # Center 
                 #event = rotate(event, max123)                   # Rotate 
                 #event = flip(event, max123)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
-                #image = np.log(image)                            # Log transform pT's for smaller numbers
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
                 event = max123 = None                            # Delete from memory
 
