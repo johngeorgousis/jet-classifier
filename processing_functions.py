@@ -18,7 +18,7 @@ from IPython.display import display
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def preprocess(event1):
+def preprocess(event):
     '''
     Input: Series (event) to be processed
     Output: Preprocessed Series
@@ -27,9 +27,7 @@ def preprocess(event1):
     -Replaces NaN values with 0
     -Converts all values to floats
     '''
-    
-    # Create series copy
-    event = event1.copy(deep=True)
+
     
     # Drop constituents 
     event = event.drop(event.index[0])
@@ -58,6 +56,9 @@ def preprocess(event1):
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Method 1: Numerical rotation. Rotate until 2nd highest φ (f_id_2) absolute value is less than 0.1 
+
 
 from scipy import ndimage
 
@@ -88,13 +89,14 @@ def test(event, pixels=60, R=1.5, display=False):
     
     event = pd.Series(event)                         # Turn into Series
     event = preprocess(event)                        # Preprocess
-    max123 = extract_max123(event)                   # Extract maxima
+    max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
     event = center(event, max123)                    # Center 
-    #event = rotate(event, max123)                   # Rotate 
-    #event = flip(event, max123)                     # Flip 
+    #event = rotate(event, f_id_2)                   # Rotate 
+    event = flip(event, flip_img)                     # Flip 
     event = create_image(event, pixels=pixels, R=R)  # Create image
     image += event                                   # Add event image to average image
     #image /= np.amax(image)                          # Normalise final image between 0 and 1
+    event = max123 = None                            # Delete from memory
    
     
     if display:
@@ -103,6 +105,30 @@ def test(event, pixels=60, R=1.5, display=False):
     
     return image    
 
+def test_no_flip(event, pixels=60, R=1.5, display=False):
+    
+    '''
+    Given an event from my_data return an image (this is for quick testing of transformation steps)
+    '''
+
+    image = np.zeros((pixels, pixels))
+    
+    event = pd.Series(event)                         # Turn into Series
+    event = preprocess(event)                        # Preprocess
+    max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
+    event = center(event, max123)                    # Center 
+    #event = rotate(event, f_id_2)                   # Rotate 
+    event = create_image(event, pixels=pixels, R=R)  # Create image
+    image += event                                   # Add event image to average image
+    #image /= np.amax(image)                          # Normalise final image between 0 and 1
+    event = max123 = None                            # Delete from memory
+   
+    
+    if display:
+        sns.heatmap(image)
+        return None
+    
+    return image    
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,10 +167,10 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                max123 = extract_max123(event)                   # Extract maxima
+                max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
                 event = center(event, max123)                    # Center 
-                #event = rotate(event, max123)                   # Rotate 
-                #event = flip(event, max123)                     # Flip 
+                #event = rotate(event, f_id_2)                   # Rotate 
+                event = flip(event, flip_img)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
@@ -166,15 +192,15 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                max123 = extract_max123(event)                   # Extract maxima
+                max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
                 event = center(event, max123)                    # Center 
-                #event = rotate(event, max123)                   # Rotate 
-                #event = flip(event, max123)                     # Flip 
+                #event = rotate(event, f_id_2)                   # Rotate 
+                event = flip(event, flip_img)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
                 event = max123 = None                            # Delete from memory
-
+                
                 a += 1
                 if a in event_no:
                     sns.heatmap(image, robust=True)
@@ -197,10 +223,10 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event=line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
-                max123 = extract_max123(event)                   # Extract maxima
+                max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
                 event = center(event, max123)                    # Center 
-                #event = rotate(event, max123)                   # Rotate 
-                #event = flip(event, max123)                     # Flip 
+                #event = rotate(event, f_id_2)                   # Rotate 
+                event = flip(event, flip_img)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
@@ -224,7 +250,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def create_image(event1, R=1.5, pixels=60):
+def create_image(event, R=1.5, pixels=60):
     
     '''    
     Creates an image of single event.
@@ -234,8 +260,8 @@ def create_image(event1, R=1.5, pixels=60):
     '''
     
     # Turn into pd.Series
-    #event = pd.Series(event1)
-    event = pd.DataFrame(event1).T
+    #event = pd.Series(event)
+    event = pd.DataFrame(event).T
     
     # If input is Series (single event) then turn into DataFrame. This makes it so that single events are processed correctly
 #     if isinstance(event, pd.Series):
@@ -297,7 +323,7 @@ def create_image(event1, R=1.5, pixels=60):
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def extract_max123(event1):
+def extract_max123(event):
 
     '''
     Takes an event and outputs a tuple containing 3 Series, each for the highest pT and its φ, η.
@@ -307,11 +333,10 @@ def extract_max123(event1):
     Output[0]: [Series of 1st max pT, φ, η]
     Output[1]: [Series of 2nd max pT, φ, η]
     Output[2]: [Series of 3rd max pT, φ, η]
+    Output[3]: [numerical index of φ of 2nd highest pT]
+    Output[4]: [boolean of whether to flip (True) or not flip (False) image]
     '''
 
-
-    # Create event copy
-    event = event1.copy(deep=True)
 
     # Separate η, φ, pT
     hdata = event[::3]
@@ -330,21 +355,25 @@ def extract_max123(event1):
     else:
         maxlist1.append([0., event.iloc[maxid1-2], event.iloc[maxid1-3]])                    # If max pT is 0, then add it as 0 and not the first value
 
-    # 3. Create & Display dataframe of max pT, η, φ
+    # 3. Create series of max pT, η, φ
     row_max1 = pd.Series(data=maxlist1[0], index=['pT', 'φ', 'η'])
 
 
 
 
-    # 0. Set Max pT to 0 to find next Max pT
+    # 0. Set Max pT to 0 to find 2nd Max pT
     pdata2 = pdata1.copy(deep=True)
     pdata2.loc[maxid1] = 0
 
-    # 1. Extract index of 2nd maximum pT
+    # 1. Extract index of 2nd max pT
     maxid2 = pdata2.idxmax()
-    f_id_2 = maxid2 - 1
-    h_id_2 = maxid2 - 2
     maxlist2 = []
+    
+    # Extract numerical index of φ of 2nd max pT
+    f_id_2 = maxid2 - 1      
+    h_id_2 = maxid2 - 2
+    
+    
 
     # 2. Extract max η, φ, pT for event
     if pdata2.max() != 0:                                                                     # Brief explanation of if statement below)
@@ -352,19 +381,24 @@ def extract_max123(event1):
     else:
         maxlist2.append([0., event.iloc[maxid2-2], event.iloc[maxid2-3]])                    # If max pT is 0, then add it as 0 and not the first value
 
-    # 3. Create & Display dataframe of max pT, η, φ
+    # 3. Create series of max pT, η, φ
     row_max2 = pd.Series(data=maxlist2[0], index=['pT', 'φ', 'η'])
     
 
 
 
-    # 0. Set Max pT to 0 to find next Max pT
+    # 0. Set Max pT to 0 to find 3rd Max pT
     pdata3 = pdata2.copy(deep=True)
     pdata3.loc[maxid2] = 0
 
     # 1. Extract index of 3rd maximum pT
     maxid3 = pdata3.idxmax()
     maxlist3 = []
+    
+    # Determine whether image will be flipped
+    flip_img = None
+    if event.iloc[maxid3-2] < 0:
+        flip_img = True
 
     # 2. Extract max η, φ, pT for event
     if pdata3.max() != 0:                                                                     # Brief explanation of if statement below)
@@ -372,13 +406,13 @@ def extract_max123(event1):
     else:
         maxlist3.append([0., event.iloc[maxid3-2], event.iloc[maxid3-3]])                    # If max pT is 0, then add it as 0 and not the first value
 
-    # 3. Create & Display dataframe of max pT, η, φ
+    # 3. Create series of max pT, η, φ
     row_max3 = pd.Series(data=maxlist3[0], index=['pT', 'φ', 'η'])
 
-
-    maxtuple = row_max1, row_max2, row_max3
     
-    return maxtuple, f_id_2
+    max123 = (row_max1, row_max2, row_max3)
+    
+    return  max123, f_id_2, flip_img
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -392,7 +426,7 @@ def extract_max123(event1):
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-def center(event1, max123, output='event', R=1.5, pixels=60):
+def center(event, max123, output='event', R=1.5, pixels=60):
     
     '''
     Centers image around (φ', η') = (0, 0). Both transformations are linear (so far). 
@@ -403,11 +437,8 @@ def center(event1, max123, output='event', R=1.5, pixels=60):
     '''
     
     # Define η, φ indices to be used later
-    h_indices = event1[::3].index
-    f_indices = event1[1::3].index
-
-    # Create copy of event
-    event = event1.copy(deep=True)
+    h_indices = event[::3].index
+    f_indices = event[1::3].index
 
     
     
@@ -415,7 +446,7 @@ def center(event1, max123, output='event', R=1.5, pixels=60):
     for h_index, f_index in zip(h_indices, f_indices):             
 
         # Define Useful Quantities
-        num_index = event.name                   # index of event, so that we can find its corresponding φ in the max123[0] dataframe of max pT's and φ, η's
+        num_index = event.name         # REDUNTANT? REMOVE IT. index of event, so that we can find its corresponding φ in the max123[0] dataframe of max pT's and φ, η's
         maxh = max123[0].loc['η']                # η of max1 pT value
         maxf = max123[0].loc['φ']                # φ of max1 pT value
         f = event.iloc[1::3][f_index]            # φ original value
@@ -480,7 +511,20 @@ def center(event1, max123, output='event', R=1.5, pixels=60):
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+def flip(event, flip_img):
+    
+    # Check if 2nd highest pT is on left-hand side
+    if flip_img:
+        
+        # Define φ indices for transformation
+        f_indices = event[1::3].index
+        
+        # For all φ 
+        for f_index in f_indices: 
+            # Multiply φ by -1
+            event.iloc[1::3][f_index] *= -1
+    
+    return event
 
 
 
