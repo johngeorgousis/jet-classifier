@@ -62,39 +62,55 @@ def preprocess(event):
 
 from scipy import ndimage
 
-def rotate(evenτ, max123):
+def rotate(event, max2):
     
-    # Define η, φ indices to be used later
+
+    # Calculate Angle
+    hmax=max2.loc['η']
+    fmax=max2.loc['φ']
+    
+    angle = 0
+    
+    if (hmax == 0) and (fmax > 0):
+        angle = np.pi/2
+    
+    elif (hmax == 0) and (fmax < 0):
+        angle = -np.pi/2
+        
+    elif hmax > 0:
+        angle = np.arctan(fmax/hmax)
+        
+    elif hmax < 0:
+        angle = np.arctan(fmax/hmax) + np.pi
+        
+
+
+#     print('\n Angle: ', angle/np.pi*180)
+#     print('\n')
+    
+    # Rotation
     h_indices = event[::3].index
     f_indices = event[1::3].index
     
-    hmax=max123[1]['η']
-    fmax=max123[1]['φ']
-    
-    if (hmax == 0) and (fmax > 0):
-        angle = 90
-    
-    elif (hmax == 0) and (fmax < 0):
-        angle = -90
-        
-    elif hmax > 0:
-        angle = np.arctan(fmax/hmax) / np.pi * 180
-        
-    elif hmax < 0:
-        angle = np.arctan(fmax/hmax) / np.pi * 180 + 180
-    
-    # For all η, φ in the event
     for h_index, f_index in zip(h_indices, f_indices): 
-        num_index = event.name
         
-        # φ, η transform
         
         h = event.iloc[0::3][h_index]
         f = event.iloc[1::3][f_index]
-        if f != 0 and h != 0:
-            #event.iloc[::3][h_index] = (((h**2) * np.sin(angle)) / f) + (f**2 * np.cos(angle) / h)
-            event.iloc[::3][h_index] = f*np.sin(angle) + h*np.cos(angle)
-            event.iloc[1::3][f_index] -= max123[1]['φ']
+        
+        
+#         print('before h: ', event.iloc[::3][h_index])
+#         print('before f: ', event.iloc[1::3][f_index])
+        
+        event.iloc[1::3][f_index] = f*np.cos(angle) - h*np.sin(angle)
+        event.iloc[::3][h_index] = f*np.sin(angle) + h*np.cos(angle) 
+        
+        
+#         print('after h: ', event.iloc[::3][h_index])
+#         print('after f: ', event.iloc[1::3][f_index])
+#         print('----------------------------------------------------------------------------------')
+
+    
         
     return event
 
@@ -193,15 +209,15 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
         with open("tth_semihad.dat") as infile:
             for line in infile:
 
-                event=line.strip().split()
+                event = line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
                 max1 = find_max1(event)           # Extract maxima
                 event = center(event, max1)                    # Center 
                 max2 = find_max2(event)
-                #event = rotate(event, max2)                   # Rotate 
+                event = rotate(event, max2)                   # Rotate 
                 max3 = find_max3(event)
-                #event = flip(event, max3)                     # Flip 
+                event = flip(event, max3)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
@@ -220,15 +236,15 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
         with open("tth_semihad.dat") as infile:
             for line in infile:
 
-                event=line.strip().split()
+                event = line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
                 max1 = find_max1(event)           # Extract maxima
                 event = center(event, max1)                    # Center 
                 max2 = find_max2(event)
-                #event = rotate(event, max2)                   # Rotate 
+                event = rotate(event, max2)                   # Rotate 
                 max3 = find_max3(event)
-                #event = flip(event, max3)                     # Flip 
+                event = flip(event, max3)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
@@ -253,15 +269,15 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
         with open("tth_semihad.dat") as infile:
             for line in infile:
 
-                event=line.strip().split()
+                event = line.strip().split()
                 event = pd.Series(event)                         # Turn into Series
                 event = preprocess(event)                        # Preprocess
                 max1 = find_max1(event)           # Extract maxima
                 event = center(event, max1)                    # Center 
                 max2 = find_max2(event)
-                #event = rotate(event, max2)                   # Rotate 
+                event = rotate(event, max2)                   # Rotate 
                 max3 = find_max3(event)
-                #event = flip(event, max3)                     # Flip 
+                event = flip(event, max3)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
@@ -294,51 +310,32 @@ def create_image(event, R=1.5, pixels=60):
     Output: ndarray (image)
     '''
     
-    # Turn into pd.Series
-    #event = pd.Series(event)
+    # Turn into DataFrame
     event = pd.DataFrame(event).T
     
-    # If input is Series (single event) then turn into DataFrame. This makes it so that single events are processed correctly
-#     if isinstance(event, pd.Series):
-#         event = pd.DataFrame(event).T
-
     # Initiate bin lists
     bin_h = []
     bin_f = []
     bin_p = []
 
-    # Define max number of constituents 
-    max_const = event.shape[1] // 3
-
-    # For all rows
-    #for i in range(event.shape[0]):             
-
-    # For all constituents (I tested it using only meaningful constituents from first column and the code was slower)
-    for i in range(max_const):
-        # Add constituent's coordinates to bin lists
+        
+    # Add constituent's coordinates to bin lists
+    const = event.shape[1] // 3     # For all constituents
+    for i in range(const):
         bin_h.append(list(event.iloc[0][::3])[i])
         bin_f.append(list(event.iloc[0][1::3])[i])
         bin_p.append(list(event.iloc[0][2::3])[i])
 
-# Tried not doing it for pT=0 constituents. Was less efficient
-#     i = 0
-#     while i < max_const and list(event.iloc[0][2::3])[i] != 0.:
-#         bin_h.append(list(event.iloc[0][::3])[i])
-#         bin_f.append(list(event.iloc[0][1::3])[i])
-#         bin_p.append(list(event.iloc[0][2::3])[i])
-#         i += 1
-
-    
 
     # Turn lists into Series
     bin_h = pd.Series(bin_h)
     bin_f = pd.Series(bin_f)
     bin_p = pd.Series(bin_p)
 
-   # Define no. of bins
+   # Define number & range of bins
     bin_count = np.linspace(-R, R, pixels + 1)
 
-    # Create bins from -R to R (using bins vector)
+    # Create image (array)
     bins = np.histogram2d(bin_h, bin_f, bins=bin_count, weights=bin_p)[0] # x and y are switch because when the bins were turned into a Series the shape[0] and shape[1] were switched
 
     # Convert to DataFrame
