@@ -62,13 +62,42 @@ def preprocess(event):
 
 from scipy import ndimage
 
-def rotate(event, f_id_2):
+def rotate(evenτ, max123):
     
+    # Define η, φ indices to be used later
+    h_indices = event[::3].index
+    f_indices = event[1::3].index
     
-    while abs(event.iloc[f_id_2]) > 0.1:
-        ndimage.rotate(event, 1)
+    hmax=max123[1]['η']
+    fmax=max123[1]['φ']
+    
+    if (hmax == 0) and (fmax > 0):
+        angle = 90
+    
+    elif (hmax == 0) and (fmax < 0):
+        angle = -90
+        
+    elif hmax > 0:
+        angle = np.arctan(fmax/hmax) / np.pi * 180
+        
+    elif hmax < 0:
+        angle = np.arctan(fmax/hmax) / np.pi * 180 + 180
+    
+    # For all η, φ in the event
+    for h_index, f_index in zip(h_indices, f_indices): 
+        num_index = event.name
+        
+        # φ, η transform
+        
+        h = event.iloc[0::3][h_index]
+        f = event.iloc[1::3][f_index]
+        if f != 0 and h != 0:
+            #event.iloc[::3][h_index] = (((h**2) * np.sin(angle)) / f) + (f**2 * np.cos(angle) / h)
+            event.iloc[::3][h_index] = f*np.sin(angle) + h*np.cos(angle)
+            event.iloc[1::3][f_index] -= max123[1]['φ']
         
     return event
+
 
 
 
@@ -194,9 +223,10 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                 event = preprocess(event)                        # Preprocess
                 max123, f_id_2, flip_img = extract_max123(event)           # Extract maxima
                 event = center(event, max123)                    # Center 
-                #event = rotate(event, f_id_2)                   # Rotate 
-                event = flip(event, flip_img)                     # Flip 
+                event = rotate(event, max123)                   # Rotate 
+                #event = flip(event, flip_img)                     # Flip 
                 event = create_image(event, pixels=pixels, R=R)  # Create image
+                #event = rotate(event, max123)
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
                 event = max123 = None                            # Delete from memory
@@ -239,25 +269,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                         return images
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-from scipy import ndimage
 
-def rotate(event, pixels=60):
-    max2 = np.partition(event.flatten(), -2)[-2]    # Value of 2nd max element
-    f = np.where(np.isclose(event, max2))[1]        # φ Coordinate of 2nd max element
-    
-    #print('f location before rotation: ', np.where(np.isclose(event, max2))[1])
-    while (np.where(np.isclose(event, max2))[1].any()) != (pixels/2):
-        
-        event = ndimage.rotate(event, 1, reshape=False, order=1) #reshape: keep same amount of pixels, #order=1: first order iterpolation (same as paper)
-        
-        if np.where(np.isclose(event, max2))[1].any() == (pixels/2):
-            break
-        
-        max2 = np.partition(event.flatten(), -2)[-2]
-    #print('f location after rotation: ', np.where(np.isclose(event, max2))[1])
-        
-     
-    return event
 
 
 
@@ -433,7 +445,104 @@ def extract_max123(event):
     return  max123, f_id_2, flip_img
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+def extract_max123(event):
 
+    '''
+    Takes an event and outputs a tuple containing 3 Series, each for the highest pT and its φ, η.
+    
+    Input: Series (event). 
+
+    Output[0]: [Series of 1st max pT, φ, η]
+    Output[1]: [Series of 2nd max pT, φ, η]
+    Output[2]: [Series of 3rd max pT, φ, η]
+    Output[3]: [numerical index of φ of 2nd highest pT]
+    Output[4]: [boolean of whether to flip (True) or not flip (False) image]
+    '''
+
+
+    # Separate η, φ, pT
+    hdata = event[::3]
+    fdata = event[1::3]
+    pdata1 = event[2::3]
+
+
+
+    # 1. Extract index of 1st maximum pT
+    maxid1 = pdata1.idxmax()
+    maxlist1 = []
+
+    # 2. Extract max η, φ, pT for event
+    if pdata1.max() != 0:                                                                     # Brief explanation of if statement below)
+        maxlist1.append([event.iloc[maxid1-1], event.iloc[maxid1-2], event.iloc[maxid1-3]])   # From event, add to list the max pT and its η, φ
+    else:
+        maxlist1.append([0., event.iloc[maxid1-2], event.iloc[maxid1-3]])                    # If max pT is 0, then add it as 0 and not the first value
+
+    # 3. Create series of max pT, η, φ
+    row_max1 = pd.Series(data=maxlist1[0], index=['pT', 'φ', 'η'])
+
+    
+    
+    
+    
+    
+    # Separate η, φ, pT
+    hdata = event[::3]
+    fdata = event[1::3]
+    pdata1 = event[2::3]
+
+
+    # 0. Set Max pT to 0 to find 2nd Max pT
+    pdata2 = pdata1.copy(deep=True)
+    pdata2.loc[pdata1.idxmax()] = 0
+
+    # 1. Extract index of 2nd max pT
+    maxid2 = pdata2.idxmax()
+    maxlist2 = []
+    
+    # Extract numerical index of φ of 2nd max pT
+    f_id_2 = maxid2 - 1      
+    h_id_2 = maxid2 - 2
+    
+    
+
+    # 2. Extract max η, φ, pT for event
+    if pdata2.max() != 0:                                                                     # Brief explanation of if statement below)
+        maxlist2.append([event.iloc[maxid2-1], event.iloc[maxid2-2], event.iloc[maxid2-3]])   # From event, add to list the max pT and its η, φ
+    else:
+        maxlist2.append([0., event.iloc[maxid2-2], event.iloc[maxid2-3]])                    # If max pT is 0, then add it as 0 and not the first value
+
+    # 3. Create series of max pT, η, φ
+    row_max2 = pd.Series(data=maxlist2[0], index=['pT', 'φ', 'η'])
+    
+
+
+
+    # 0. Set Max pT to 0 to find 3rd Max pT
+    pdata3 = pdata2.copy(deep=True)
+    pdata3.loc[maxid2] = 0
+
+    # 1. Extract index of 3rd maximum pT
+    maxid3 = pdata3.idxmax()
+    maxlist3 = []
+    
+    # Determine whether image will be flipped
+    flip_img = None
+    if event.iloc[maxid3-2] < 0:
+        flip_img = True
+
+    # 2. Extract max η, φ, pT for event
+    if pdata3.max() != 0:                                                                     # Brief explanation of if statement below)
+        maxlist3.append([event.iloc[maxid3-1], event.iloc[maxid3-2], event.iloc[maxid3-3]])   # From event, add to list the max pT and its η, φ
+    else:
+        maxlist3.append([0., event.iloc[maxid3-2], event.iloc[maxid3-3]])                    # If max pT is 0, then add it as 0 and not the first value
+
+    # 3. Create series of max pT, η, φ
+    row_max3 = pd.Series(data=maxlist3[0], index=['pT', 'φ', 'η'])
+
+    
+    max123 = (row_max1, row_max2, row_max3)
+    
+    return  max123, f_id_2, flip_img
 
 
 
