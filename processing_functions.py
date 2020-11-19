@@ -239,7 +239,25 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
                         return images
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+from scipy import ndimage
 
+def rotate(event, pixels=60):
+    max2 = np.partition(event.flatten(), -2)[-2]    # Value of 2nd max element
+    f = np.where(np.isclose(event, max2))[1]        # φ Coordinate of 2nd max element
+    
+    #print('f location before rotation: ', np.where(np.isclose(event, max2))[1])
+    while (np.where(np.isclose(event, max2))[1].any()) != (pixels/2):
+        
+        event = ndimage.rotate(event, 1, reshape=False, order=1) #reshape: keep same amount of pixels, #order=1: first order iterpolation (same as paper)
+        
+        if np.where(np.isclose(event, max2))[1].any() == (pixels/2):
+            break
+        
+        max2 = np.partition(event.flatten(), -2)[-2]
+    #print('f location after rotation: ', np.where(np.isclose(event, max2))[1])
+        
+     
+    return event
 
 
 
