@@ -1,10 +1,13 @@
 import numpy as np
-import scipy as sp
+#import scipy as sp
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import time
 from IPython.display import display
+
+import tensorflow as tf
+print('TensorFlow Version: ', tf.__version__)
 
                     
                     
