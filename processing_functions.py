@@ -6,7 +6,13 @@ import matplotlib.pyplot as plt
 import time
 from IPython.display import display
 
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
 import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
 print('TensorFlow Version: ', tf.__version__)
 
                     
