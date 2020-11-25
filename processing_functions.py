@@ -38,7 +38,7 @@ print('TensorFlow Version: ', tf.__version__)
 
 
 
-def average_image(pixels=60, R=1.5, event_no=12178, display=False):
+def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='tth_semihad.dat'):
     '''
     Reads events directly from a file and creates an average image of the events. 
     
@@ -55,7 +55,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
     #Return single image
     if type(event_no) == int:
         
-        with open("tth_semihad.dat") as infile:
+        with open(file) as infile:
             for line in infile:
 
                 event = line.strip().split()
@@ -82,7 +82,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
     # Display Images
     elif display == True and type(event_no) == list:
                 
-        with open("tth_semihad.dat") as infile:
+        with open(file) as infile:
             for line in infile:
 
                 event = line.strip().split()
@@ -115,7 +115,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False):
     elif type(event_no) == list:
         images = []                                         # List containing the output images
         
-        with open("tth_semihad.dat") as infile:
+        with open(file) as infile:
             for line in infile:
 
                 event = line.strip().split()
