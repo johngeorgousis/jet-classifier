@@ -27,6 +27,17 @@ and the anti-top decays leptonically. <br /> I selected events with exactly 1 fa
 - pT[GeV] > 0
 
 
+
+# Convert .dat file into string (list comprehension)
+datContent = [i.strip().split() for i in open("tth_semihad.dat").readlines()]
+
+# Convert list into DataFrame
+mydata = pd.DataFrame(datContent)
+
+
+
+
+
 # # Display the data
 # mydata = mydata.rename(columns={0: 'Const'})
 # display(mydata.head())
@@ -52,8 +63,3 @@ and the anti-top decays leptonically. <br /> I selected events with exactly 1 fa
 
 
 
-# Convert .dat file into string (list comprehension)
-datContent = [i.strip().split() for i in open("tth_semihad.dat").readlines()]
-
-# Convert list into DataFrame
-mydata = pd.DataFrame(datContent)
