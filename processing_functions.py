@@ -103,10 +103,10 @@ def create_dataset(file, pixels=40, R=1.5):
             image += event                                   # Add event image to average image
             image /= np.amax(image)                          # Normalise final image between 0 and 1
             
-            event = max123 = None                            # Delete from memory
+            event=max1=max2=max3=None                            # Delete from memory
 
-            datum = np.array((image, label))
-            data = np.vstack((data, datum))
+            event = np.array((image, label))
+            data = np.vstack((data, event))
     
     data = np.delete(data, 0, axis=0)
     return data
@@ -163,7 +163,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='tth_sem
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
-                event = max123 = None                            # Delete from memory
+                event=max1=max2=max3=None                            # Delete from memory
 
                 a += 1
                 if a == event_no:                                 # Break if max sample size for average image is exceeded 
@@ -190,7 +190,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='tth_sem
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
-                event = max123 = None                            # Delete from memory
+                event=max1=max2=max3=None                            # Delete from memory
                 
                 a += 1
                 if a in event_no:
@@ -223,7 +223,7 @@ def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='tth_sem
                 event = create_image(event, pixels=pixels, R=R)  # Create image
                 image += event                                   # Add event image to average image
                 #image /= np.amax(image)                          # Normalise final image between 0 and 1
-                event = max123 = None                            # Delete from memory
+                event=max1=max2=max3=None                            # Delete from memory
 
                 a += 1
                 if a in event_no:                                 # Store images
