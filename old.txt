@@ -1,3 +1,28 @@
+Lame NN
+
+# model = tf.keras.Sequential([
+#            tf.keras.layers.Flatten(input_shape=(batch_size, pixels, pixels)),
+#            tf.keras.layers.Dense(256, activation = 'relu'),
+#            tf.keras.layers.Dropout(0.2),
+#            tf.keras.layers.Dense(128, activation = 'relu'),
+#            tf.keras.layers.Dropout(0.2),
+#            tf.keras.layers.Dense(64, activation = 'relu'),
+#            tf.keras.layers.Dropout(0.2),
+#            tf.keras.layers.Dense(2, activation = 'softmax')
+# ])
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ⭐(Ignore) Step 0: Read the data (tar.gz file) & Explore it
 **Read**
 

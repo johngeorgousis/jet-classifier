@@ -66,12 +66,10 @@ print('TensorFlow Version: ', tf.__version__)
 
 def create_dataset(file, pixels=40, R=1.5):
     '''
-    Reads events directly from a file and creates an average image of the events. 
-    
-    pixels: int. Image Resolution
-    R: float. Fat jet radius
-    event_no: int/list. Number of events for which images are created. If int, then single image (faster). If list, then multiple images (slower)
-    display: boolean. Indicates whether images should be displayed automatically (return null) or returned as an ndarray. 
+    Takes dat file of events
+    Labels events (background = 0, signal = 1)
+    Preprocessed events and turns into images
+    Returns 2d array where rows: events and columns: (image, label) 
     '''
 
     data = ((0, 0))
