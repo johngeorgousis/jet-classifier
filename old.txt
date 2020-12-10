@@ -1,3 +1,71 @@
+
+OLD ML Dataset create_dataset
+
+# # # Load Previously saved data
+# # sdata = pd.read_pickle('sdata')
+# # bdata = pd.read_pickle('bdata')
+
+# # Import, Preprocess, Create Dataset
+# sdata = create_dataset('data_signal.dat')
+# bdata = create_dataset('data_background.dat')
+
+# # Save Datasets
+# pd.DataFrame(sdata).to_pickle('sdata')
+# pd.DataFrame(sdata).to_pickle('bdata')
+
+# stest = pd.read_pickle('sdata')
+# btest = pd.read_pickle('bdata')
+
+# # Concat and Suffle
+# data = np.concatenate((sdata, bdata), axis=0)
+# data = sklearn.utils.shuffle(data)
+
+# num_of_examples = data.shape[0]
+# print('Total Events:', num_of_examples)
+
+# # Separate Examples and Labels
+# data= pd.DataFrame(data, columns=['examples', 'labels'])
+# examples= data['examples']         
+# labels = data['labels']    
+
+# from sklearn.model_selection import train_test_split
+
+# train_examples, test_examples, train_labels, test_labels = train_test_split(examples, labels, test_size=0.15, random_state=42)
+
+# train_examples, val_examples, train_labels, val_labels = train_test_split(train_examples, train_labels, test_size=0.18, random_state=42)
+
+# print('Train: ', train_examples.shape, train_labels.shape)
+# print('Val: ', val_examples.shape, val_labels.shape)
+# print('Test: ', test_examples.shape, test_labels.shape)
+
+# train_data = tf.data.Dataset.from_tensor_slices((train_examples, train_labels))
+# val_data = tf.data.Dataset.from_tensor_slices((val_examples, val_labels))
+# test_data = tf.data.Dataset.from_tensor_slices((test_examples, test_labels))
+
+# print(train_data)
+# print(val_data)
+# print(test_data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Lame NN
 
 # model = tf.keras.Sequential([

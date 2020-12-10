@@ -29,6 +29,15 @@ MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
+
+
+data_b
+data_b_normal
+data_s
+data_s_normal
+
+
+
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec

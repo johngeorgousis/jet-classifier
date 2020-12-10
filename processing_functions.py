@@ -37,7 +37,43 @@ print('TensorFlow Version: ', tf.__version__)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+def create_dataset_CNN(file, pixels=40, R=1.5):
+    '''
+    Takes dat file of events
+    Labels events (background = 0, signal = 1)
+    Preprocessed events and turns into images
+    Returns 2d array where rows: events and columns: (image, label) 
+    '''
 
+    image = np.zeros((pixels, pixels))                           # Define initial image
+    data = np.zeros((pixels, pixels)) 
+ 
+    
+    with open(file) as infile:
+        for line in infile:
+
+            # Preprocessing
+            event = line.strip().split()
+            event = pd.Series(event)                         # Turn into Series
+            event = preprocess(event)                        # Preprocess
+            max1 = find_max1(event)                          # Extract maxima
+            event = center(event, max1)                      # Center 
+            max2 = find_max2(event)                          # Extract maxima
+            event = rotate(event, max2)                      # Rotate 
+            max3 = find_max3(event)                          # Extract maxima
+            event = flip(event, max3)                        # Flip 
+            event = create_image(event, pixels=pixels, R=R)  # Create image
+            image = event                                   # Rename
+            #image /= np.amax(image)                          # Normalise final image between 0 and 1
+            
+            event=max1=max2=max3=None
+            
+            data = np.concatenate((data, image))
+            
+            
+    for i in range(40):
+        data = np.delete(data, i, axis=0)
+    return data
 
 
 
@@ -82,6 +118,7 @@ def create_dataset(file, pixels=40, R=1.5):
         label = 1
     else: 
         print("ERROR: File name unclear")
+        return
     
     with open(file) as infile:
         for line in infile:
@@ -98,8 +135,8 @@ def create_dataset(file, pixels=40, R=1.5):
             event = flip(event, max3)                        # Flip 
             event = create_image(event, pixels=pixels, R=R)  # Create image
             #event = event.flatten()                          # Flatten image from 2D to 1D for NN
-            image += event                                   # Add event image to average image
-            image /= np.amax(image)                          # Normalise final image between 0 and 1
+            image = event                                   # Rename
+            #image /= np.amax(image)                          # Normalise final image between 0 and 1
             
             event=max1=max2=max3=None                            # Delete from memory
 
