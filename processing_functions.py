@@ -65,6 +65,7 @@ def create_dataset_CNN(file, pixels=40, R=1.5):
             event = create_image(event, pixels=pixels, R=R)  # Create image
             image = event                                   # Rename
             #image /= np.amax(image)                          # Normalise final image between 0 and 1
+            image = np.log(image)                            # Log image
             
             event=max1=max2=max3=None
             
