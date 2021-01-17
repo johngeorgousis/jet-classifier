@@ -63,9 +63,9 @@ def create_dataset_CNN(file, pixels=40, R=1.5):
             max3 = find_max3(event)                          # Extract maxima
             event = flip(event, max3)                        # Flip 
             event = create_image(event, pixels=pixels, R=R)  # Create image
-            image = event                                   # Rename
+            image = event                                    # Rename
             #image /= np.amax(image)                          # Normalise final image between 0 and 1
-            image = np.log(image)                            # Log image
+            #image = np.log(image)                            # Log image
             
             event=max1=max2=max3=None
             
@@ -167,7 +167,7 @@ def create_dataset(file, pixels=40, R=1.5):
 
 
 
-def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='tth_semihad.dat'):
+def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='dataset_background.dat'):
     '''
     Reads events directly from a file and creates an average image of the events. 
     
