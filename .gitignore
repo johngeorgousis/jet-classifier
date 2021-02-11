@@ -45,7 +45,11 @@ data_s_normal_csv
 data_s_log_csv
 data_s_norm_csv
 
-
+model_SVC_100_1.joblib
+model_adaboost_80_57.joblib
+model_bagging_80_60.joblib
+model_multiNB_70_69.joblib
+model_rf_81_60.joblib
 
 
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
