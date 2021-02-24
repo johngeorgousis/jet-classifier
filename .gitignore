@@ -30,7 +30,8 @@ MANIFEST
 # PyInstaller
 #  Usually these files are written by a python script from a template
 
-
+dataset_signal2.dat
+dataset_background2.dat
 
 data_b
 data_b_csv
