@@ -30,22 +30,8 @@ MANIFEST
 # PyInstaller
 #  Usually these files are written by a python script from a template
 
-dataset_signal2.dat
-dataset_background2.dat
-
-data_b
-data_b_csv
-data_b_normal
-data_b_normal_csv
-data_b_log_csv
-data_b_norm_csv
-
-data_s
-data_s_csv
-data_s_normal
-data_s_normal_csv
-data_s_log_csv
-data_s_norm_csv
+data*
+models*
 
 model_SVC_100_1.joblib
 model_adaboost_80_57.joblib

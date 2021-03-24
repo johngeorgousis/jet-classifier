@@ -10,13 +10,14 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
 import sklearn
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier, RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier  # Decision Trees
 from sklearn.naive_bayes import MultinomialNB    # Naive Bayes
 from sklearn.naive_bayes import GaussianNB       # Gaussian Naive Bayes
 from sklearn.svm import SVC                      # SVM
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import make_scorer
 import random
@@ -28,75 +29,178 @@ from tensorflow.keras.models import Sequential
 print('TensorFlow Version: ', tf.__version__)
                 
 
-    
 
+'''
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW TENSORFLOW 
+'''
+def create_dataset(file, pixels=40, R=1.5):
+    '''
+    Takes dat file of events
+    Labels events (background = 0, signal = 1)
+    Preprocessed events and turns into images
+    Returns 2d array where rows: events and columns: (image, label) 
+    '''
 
+    image = np.zeros((pixels, pixels))                           # Define initial image
+    data = {}
+    a = 0
     
-    
-    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    with open(file) as infile:
+        for line in infile:
 
-
-
+            # Preprocessing
+            event = line.strip().split()
+            event = pd.Series(event)                         # Turn into Series
+            event = preprocess(event)                        # Preprocess
+            max1 = find_max1(event)                          # Extract maxima
+            event = center(event, max1)                      # Center 
+            max2 = find_max2(event)                          # Extract maxima
+            event = rotate(event, max2)                      # Rotate 
+            max3 = find_max3(event)                          # Extract maxima
+            event = flip(event, max3)                        # Flip 
+            event = create_image(event, pixels=pixels, R=R)  # Create image
+            image = event                                    # Rename
+            #image /= np.sum(image)
+            #image /= np.amax(image)                          # Normalise final image between 0 and 1
+            #image = np.log(image)                            # Log image
+            
+            event=max1=max2=max3=None
+            
+            a += 1
+            data[a] = image
+            
+    data = list(data.values())
+    data = np.array(data)
+    data = np.reshape(data, (a*pixels, pixels))
     
+        
+    return data
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def normalise(image, label):
     
+    '''
+    To be used in preprocess_ML_tf
+    '''
     
-
-    
-
-
-    
-    
-    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
+    image = tf.cast(image, tf.int64)                 # Set dtype to int64
+    label = tf.cast(label, tf.int64)
+    #image /= np.amax(image.numpy())                    # Normalise Image
+    #image = tf.image.resize(image, (pixels, pixels, 1))   # Resize image to 40x40
+    return image, label
 
 def preprocess_ML_tf(data_s, data_b, batch_size):
     
+    '''Prepares dataset for TensorFlow Machine Learning algorithm'''
     
-    '''TRAIN VAL TEST SPLIT'''
+    '''
+    Input1: Signal Dataset created using create_dataset
+    Input2: Background Dataset created using create_dataset
+    Input3: Batch size
+    
+    Process:
+    - Create labels for signals (1) and backgrounds (0)
+    - Combine signal and background datasets
+    - Combine signal and background labels
+    - Define useful (local) variables
+    - Reshape main dataset (for CNN)
+    - Train-Val-Test Split examples and labels
+    - Turn into tf datasets (train, val, split)
+    - Create Batches (train, val, split)
+    - Define useful (global) variables (returned later)
+    - Plot Events to Visualise & make sure everything's right (e.g. normalised vs non-normalised)
+    
+    Output1: train_batches
+    Output2: val_batches
+    Output3: test_batches
+    Output4: num_of_batches_train
+    Output5: num_of_batches_val
+    Output6: num_of_batches_test
+    '''
     
     
+    
+    '''Preprocess'''
     # Create s&b labels
     slabels = np.ones(data_s.shape[0]//40)
     blabels = np.zeros(data_b.shape[0]//40)
 
-    # Concatenate examples and labels
+    # Concatenate s&b and s&b labels
     data = np.concatenate((data_s, data_b), axis=0)
     labels = np.concatenate((slabels, blabels), axis=0)
 
-    # Define useful quantities
+    # Define & Print useful variables (local)
     num_of_examples = data.shape[0] // 40     # divide by 40 because 1st dim is 40 * num_of_examples
     num_of_labels = labels.shape[0]
     print('Total Events:', num_of_examples)
@@ -108,8 +212,7 @@ def preprocess_ML_tf(data_s, data_b, batch_size):
     print(' ')
     
     
-    
-    
+    '''Train-Val-Test Split'''
     train_examples, test_examples, train_labels, test_labels = train_test_split(examples, labels, test_size=0.15, random_state=42)
     train_examples, val_examples, train_labels, val_labels = train_test_split(train_examples, train_labels, test_size=0.18, random_state=42)
 
@@ -130,25 +233,13 @@ def preprocess_ML_tf(data_s, data_b, batch_size):
     
     
     '''BATCHES'''
-    
-    
     batch_size = batch_size
 
-    def normalise(image, label):
-        image = tf.cast(image, tf.int64)                 # Set dtype to int64
-        label = tf.cast(label, tf.int64)
-        #image /= np.amax(image.numpy())                    # Normalise Image
-        #image = tf.image.resize(image, (pixels, pixels, 1))   # Resize image to 40x40
-        return image, label
-
-
-
     train_batches = train_data.cache().shuffle(num_of_examples).map(normalise).batch(batch_size, drop_remainder=True).prefetch(1)
-
     val_batches = val_data.cache().shuffle(num_of_examples).map(normalise).batch(batch_size, drop_remainder=True).prefetch(1)  # or prefetch(buffer_size=tf.data.experimental.AUTOTUNE) 
-
     test_batches = test_data.cache().shuffle(num_of_examples).map(normalise).batch(batch_size, drop_remainder=True).prefetch(1)
     
+    # Define useful variables (will be returend)
     num_of_batches_train = len(train_labels) // batch_size
     num_of_batches_val = len(val_labels) // batch_size
     num_of_batches_test = len(test_labels) // batch_size
@@ -158,8 +249,6 @@ def preprocess_ML_tf(data_s, data_b, batch_size):
     
     
     '''VISUALISE'''
-    
-    
     plt.figure(figsize=(15,10))
 
     for images, labels in train_batches.take(1):
@@ -172,8 +261,6 @@ def preprocess_ML_tf(data_s, data_b, batch_size):
     
     
     return train_batches, val_batches, test_batches, num_of_batches_train, num_of_batches_val, num_of_batches_test
-
-                    
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,147 +275,17 @@ def preprocess_ML_tf(data_s, data_b, batch_size):
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-def preprocess_ML_sklearn(data_s, data_b):
-    
-    # Create s&b labels
-    slabels = np.ones(data_s.shape[0]//40)
-    blabels = np.zeros(data_b.shape[0]//40)
-
-    # Concatenate examples and labels
-    data = np.concatenate((data_s, data_b), axis=0)
-    labels = np.concatenate((slabels, blabels), axis=0)
-
-    # Define useful quantities
-    num_of_examples = data.shape[0] // 40     # divide by 40 because 1st dim is 40 * num_of_examples
-    num_of_labels = labels.shape[0]
-    print('Total Events:', num_of_examples)
-    print('Total Labels:', num_of_labels)
-
-    # Reshape examples (for sklearn)
-    examples = data.reshape(num_of_examples, 1600)
-    print('\nShape: ', examples.shape)
-
-    train_examples, test_examples, train_labels, test_labels = train_test_split(examples, labels, test_size=0.15, random_state=42)
-    train_examples, val_examples, train_labels, val_labels = train_test_split(train_examples, train_labels, test_size=0.18, random_state=42)
-
-    print('\nTrain: ', train_examples.shape, train_labels.shape)
-    print('Val: ', val_examples.shape, val_labels.shape)
-    print('Test: ', test_examples.shape, test_labels.shape)
-    print(' ')
-
-    eg = train_examples[5].reshape(40, 40)
-
-    sns.heatmap(eg)
-    plt.title("Train Image Example")
-    plt.show()
-    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-def compare_f1(models, test_examples, test_labels):
-    
-    # Compare f1 score
-    from sklearn.metrics import f1_score
-
-    model_names = []
-    scores = []
-
-    for model in models:
-
-        labels = test_labels
-        preds = model.predict(test_examples)
-        scores.append(f1_score(labels, preds))
-        model_names.append(model.__class__.__name__)
-
-
-    fig, ax = plt.subplots(figsize=(27, 6))
-    plt.bar(model_names, scores, color="darkcyan")
-    plt.show()
-
-    # Print top 5 algorithms
-    n = 5
-    max_i = np.flip(np.argsort(scores)[-n:])
-
-    print("Top 5 Algorithms: \n")
-
-    for i in max_i:
-        print(model_names[i])
-        
-        
-
-def preprocess_ML_sklearn(data_s, data_b):
-    
-    # Create s&b labels
-    slabels = np.ones(data_s.shape[0]//40)
-    blabels = np.zeros(data_b.shape[0]//40)
-
-    # Concatenate examples and labels
-    data = np.concatenate((data_s, data_b), axis=0)
-    labels = np.concatenate((slabels, blabels), axis=0)
-
-    # Define useful quantities
-    num_of_examples = data.shape[0] // 40     # divide by 40 because 1st dim is 40 * num_of_examples
-    num_of_labels = labels.shape[0]
-    print('Total Events:', num_of_examples)
-    print('Total Labels:', num_of_labels)
-
-    # Reshape examples (for sklearn)
-    examples = data.reshape(num_of_examples, 1600)
-    print('\nShape: ', examples.shape)
-
-    train_examples, test_examples, train_labels, test_labels = train_test_split(examples, labels, test_size=0.15, random_state=42)
-    train_examples, val_examples, train_labels, val_labels = train_test_split(train_examples, train_labels, test_size=0.18, random_state=42)
-
-    print('\nTrain: ', train_examples.shape, train_labels.shape)
-    print('Val: ', val_examples.shape, val_labels.shape)
-    print('Test: ', test_examples.shape, test_labels.shape)
-    print(' ')
-
-    eg = train_examples[5].reshape(40, 40)
-
-    sns.heatmap(eg)
-    plt.title("Train Image Example")
-    plt.show()
-    
-    return train_examples, train_labels, val_examples, val_labels, test_examples, test_labels
-    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-               
-    
 def visualise_preds(model, test_batches):
+    
+    '''
+    
+    Visualise Predictions for TensorFlow
+    
+    Input1: Model
+    Input 2: Predictions
+    Output: NULL
+    
+    '''
     
     '''1st'''
     
@@ -370,8 +327,6 @@ def visualise_preds(model, test_batches):
         ax2.set_title('Class Probability')
         ax2.set_xlim(0, 1.1)
         plt.tight_layout()
-    
-                    
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -386,16 +341,15 @@ def visualise_preds(model, test_batches):
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-             
-    
-    
-    
-    
-    
-    
-    
-    
 def learning_curve(train_batches, val_batches, test_batches, num_of_batches_train, num_of_batches_val):
+    
+    '''
+    
+    Plots a learning curve to determine whether more data would improve the model (i.e. detect underfitting)
+    
+    '''
+    
+    
     input_shape=(40, 40, 1)
     kernel_size = 2
     padding='valid'
@@ -449,7 +403,6 @@ def learning_curve(train_batches, val_batches, test_batches, num_of_batches_trai
     plt.ylabel('Accuracy')
     plt.title('Learning Curve')
     plt.show()
-                    
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -464,9 +417,14 @@ def learning_curve(train_batches, val_batches, test_batches, num_of_batches_trai
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                    
-
 def model_complexity_graph(history):
+    
+    '''
+    
+    Plots model complexity graph to determine how many epochs you need (i.e. when the model starts overfitting the data)
+    
+    '''
+    
     
     training_accuracy = history.history['accuracy']
     validation_accuracy = history.history['val_accuracy']
@@ -489,81 +447,55 @@ def model_complexity_graph(history):
     plt.legend(loc='upper right')
     plt.title('Training and Validation Loss')
     plt.show()
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def cmx_tf(models, test_batches, num_of_batches_test):
     
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-def compare_f1(models, test_examples, test_labels):
+    '''
+    Plots Confusion Matrix for TensorFlow list of models
     
-    # Compare f1 score
-    from sklearn.metrics import f1_score
-
-    model_names = []
-    scores = []
-
-    for model in models:
-
-        labels = test_labels
-        preds = model.predict(test_examples)
-        scores.append(f1_score(labels, preds))
-        model_names.append(model.__class__.__name__)
-
-
-    fig, ax = plt.subplots(figsize=(27, 6))
-    plt.bar(model_names, scores, color="darkcyan")
-    plt.show()
-
-    # Print top 5 algorithms
-    n = 5
-    max_i = np.flip(np.argsort(scores)[-n:])
-
-    print("Top 5 Algorithms: \n")
-
-    for i in max_i:
-        print(model_names[i])
-
-
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def cmx_sklearn(models, examples, labels):
-    
-    for n in range(6):
-        plt.subplot(3,3,n+1)
+    '''
     
     for model in models:
+    
+        '''Extract Preds & Labels'''
 
-        preds = model.predict(examples)
-        labels = labels
+        preds_all = []
+        labels_all = []
+        preds_batch = []
+        labels_batch = []
+
+
+        # For all batches
+        for batch, labels in test_batches.take(num_of_batches_test):
+
+            # 64 preds and labels added to list
+            pp = model.predict(batch)
+            preds_batch = np.array([np.argmax(pp[i]) for i in range(len(pp))])
+            labels_batch = labels.numpy()
+
+            preds_all.append(preds_batch)
+            labels_all.append(labels_batch)
+
+
+        # Convert list of lists to ndarray and flatten to get 1D ndarray of all preds and 1D ndarray of all labels
+        preds = np.array(preds_all).flatten()
+        labels = np.array(labels_all).flatten()      
+
+
+        '''Build CMX'''
 
         cmx_non_normal = tf.math.confusion_matrix(labels, preds).numpy() # Create Confusion Matrix
         cmx0 = cmx_non_normal[0] / cmx_non_normal[0].sum()
@@ -576,7 +508,7 @@ def cmx_sklearn(models, examples, labels):
         sns.heatmap(cmx, cmap=['skyblue', 'deepskyblue', 'dodgerblue', 'blue',  'darkblue'])
 
         # xylabels and title
-        plt.title(remove_text_inside_brackets(str(model)))
+        plt.title('Confusion Matrix')
         plt.xlabel('PREDICTIONS')
         plt.ylabel('LABELS')
 
@@ -603,29 +535,45 @@ def cmx_sklearn(models, examples, labels):
                                color="orangered", 
                                fontsize = 20)
 
-        plt.show()                   
-                    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        plt.show()
 
 
+
+        # # Print P(signal|signal) and P(signal|background)
+        # pss = cmx[1,1] / (cmx[1,1]+cmx[1,0])
+        # pbs = 1 - pss
+        # psb = cmx[0,1] / (cmx[0,1]+cmx[0,0])
+        # pbb = 1 - psb
+        # precision = cmx[1,1] / (cmx[1,1]+cmx[0,1])
+        # recall = cmx[1,1] / (cmx[1,1]+cmx[1,0])
+        # print('\n')
+        # print('P(signal|signal) = {:.0f}%'.format(100*pss))
+        # print('P(signal|background) = {:.0f}%'.format(100*psb)) 
+        # print('P(background|background) = {:.0f}%'.format(100*pbb))
+        # print('P(background|signal) = {:.0f}%'.format(100*pbs))
+        # print('Precision = {:.0f}'.format(precision*100))
+        # print('Recall = {:.0f}'.format(recall*100))
+        # print('\n')
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 def ROC3_tf(model0, model1, model2, test_batches, num_of_batches_test):
     
-
+    ''' 
+    Plot ROC curve for exactly 3 TensorFlow models
+    
+    '''
     
     '''Extract Preds & Labels'''
 
@@ -750,67 +698,264 @@ def ROC3_tf(model0, model1, model2, test_batches, num_of_batches_test):
 #     plt.show()
 
     ##########################################################################################################################################################################
-
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-def cmx_tf(models, test_batches, num_of_batches_test):
+'''
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN SKLEARN 
+'''
     
+def preprocess_ML_sklearn(data_s, data_b):
+    
+    '''Prepares dataset for sklearn Machine Learning algorithm'''
+    
+    '''
+    Input1: Signal Dataset created using create_dataset
+    Input2: Background Dataset created using create_dataset
+    
+    Process:
+    - Create labels for signals (1) and backgrounds (0)
+    - Combine signal and background datasets
+    - Combine signal and background labels
+    - Define useful (local) variables
+    - Reshape main dataset (for sklearn)
+    - Train-Val-Test Split examples and labels
+    - Plot Events to Visualise & make sure everything's right (e.g. normalised vs non-normalised)
+    
+    Output1: train_examples
+    Output2: train_examples
+    Output3: val_examples
+    Output4: val_labels
+    Output5: test_examples
+    Output6: test_labels
+    '''
+    
+    # Create s&b labels
+    slabels = np.ones(data_s.shape[0]//40)
+    blabels = np.zeros(data_b.shape[0]//40)
+
+    # Concatenate examples and labels
+    data = np.concatenate((data_s, data_b), axis=0)
+    labels = np.concatenate((slabels, blabels), axis=0)
+
+    # Define useful quantities
+    num_of_examples = data.shape[0] // 40     # divide by 40 because 1st dim is 40 * num_of_examples
+    num_of_labels = labels.shape[0]
+    print('Total Events:', num_of_examples)
+    print('Total Labels:', num_of_labels)
+
+    # Reshape examples (for sklearn)
+    examples = data.reshape(num_of_examples, 1600)
+    print('\nShape: ', examples.shape)
+
+    train_examples, test_examples, train_labels, test_labels = train_test_split(examples, labels, test_size=0.15, random_state=42)
+    train_examples, val_examples, train_labels, val_labels = train_test_split(train_examples, train_labels, test_size=0.18, random_state=42)
+
+    print('\nTrain: ', train_examples.shape, train_labels.shape)
+    print('Val: ', val_examples.shape, val_labels.shape)
+    print('Test: ', test_examples.shape, test_labels.shape)
+    print(' ')
+
+    eg = train_examples[5].reshape(40, 40)
+
+    sns.heatmap(eg)
+    plt.title("Train Image Example")
+    plt.show()
+    
+    return train_examples, train_labels, val_examples, val_labels, test_examples, test_labels
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def compare_f1(models, test_examples, test_labels):
+    
+    '''Plots f1-score of Models using Test Data and prints top 5 models'''
+    
+    '''
+    Input1: list of models
+    Input2: test examples
+    Input3: test labels
+    
+    Output1: NULL
+    '''
+    
+    # Local Variables
+    model_names = []
+    scores = []
+
+    # Get plot data
+    for model in models:
+
+        labels = test_labels
+        preds = model.predict(test_examples)
+        scores.append(f1_score(labels, preds))
+        model_names.append(model.__class__.__name__)
+
+    # Make Plots
+    fig, ax = plt.subplots(figsize=(27, 6))
+    plt.bar(model_names, scores, color="darkcyan")
+    plt.show()
+
+    # Print top 5 algorithms
+    max_i = np.flip(np.argsort(scores))
+    print('Performance')
+    for i in max_i:
+        print('{:.2f} {}'.format(scores[i], model_names[i])) 
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def compare_accuracy(models, test_examples, test_labels):
+    
+    '''Plots f1-score of Models using Test Data and prints top 5 models'''
+    
+    '''
+    Input1: list of models
+    Input2: test examples
+    Input3: test labels
+    
+    Output1: NULL
+    '''
+    
+    # Local Variables
+    model_names = []
+    scores = []
+
+    # Get plot data
+    for model in models:
+
+        labels = test_labels
+        preds = model.predict(test_examples)
+        scores.append(accuracy_score(labels, preds))
+        model_names.append(model.__class__.__name__)
+
+    # Make Plots
+    fig, ax = plt.subplots(figsize=(27, 6))
+    plt.bar(model_names, scores, color="darkcyan")
+    plt.show()
+
+    # Print top 5 algorithms
+    max_i = np.flip(np.argsort(scores))
+    print('Performance')
+    for i in max_i:
+        print('{:.2f} {}'.format(scores[i], model_names[i]))  
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+def cmx_sklearn(models, test_examples, test_labels, dim=4):
+    
+    '''
+    Plots Confusion Matrix for sklearn list of models
+    
+    '''
+    cmxs = []
     
     for model in models:
-    
-        '''Extract Preds & Labels'''
+            
+            preds = model.predict(test_examples)
+            labels = test_labels
 
-        preds_all = []
-        labels_all = []
-        preds_batch = []
-        labels_batch = []
+            cmx_non_normal = tf.math.confusion_matrix(labels, preds).numpy() # Create Confusion Matrix
+            cmx0 = cmx_non_normal[0] / cmx_non_normal[0].sum()
+            cmx1 = cmx_non_normal[1] / cmx_non_normal[1].sum()
+            cmx = np.stack((cmx0, cmx1), axis=0)
+            cmxs.append(cmx)
 
-
-        # For all batches
-        for batch, labels in test_batches.take(num_of_batches_test):
-
-            # 64 preds and labels added to list
-            pp = model.predict(batch)
-            preds_batch = np.array([np.argmax(pp[i]) for i in range(len(pp))])
-            labels_batch = labels.numpy()
-
-            preds_all.append(preds_batch)
-            labels_all.append(labels_batch)
-
-
-        # Convert list of lists to ndarray and flatten to get 1D ndarray of all preds and 1D ndarray of all labels
-        preds = np.array(preds_all).flatten()
-        labels = np.array(labels_all).flatten()      
-
-
-        '''Build CMX'''
-
-        cmx_non_normal = tf.math.confusion_matrix(labels, preds).numpy() # Create Confusion Matrix
-        cmx0 = cmx_non_normal[0] / cmx_non_normal[0].sum()
-        cmx1 = cmx_non_normal[1] / cmx_non_normal[1].sum()
-        cmx = np.stack((cmx0, cmx1), axis=0)
-
-
+    plt.figure(figsize=(25,20))
+    for n in range(len(cmxs)):
         # Plot confusion matrix
-        fig, ax = plt.subplots()
-        sns.heatmap(cmx, cmap=['skyblue', 'deepskyblue', 'dodgerblue', 'blue',  'darkblue'])
+        ax = plt.subplot(dim, dim, n+1)
+        sns.heatmap(cmxs[n], cmap=['skyblue', 'deepskyblue', 'dodgerblue', 'blue',  'darkblue'])
 
         # xylabels and title
-        plt.title('Confusion Matrix')
+        plt.title(remove_text_inside_brackets(str(models[n])))
         plt.xlabel('PREDICTIONS')
         plt.ylabel('LABELS')
 
@@ -827,7 +972,7 @@ def cmx_tf(models, test_batches, num_of_batches_test):
         for i in range(2):
             for j in range(2):
 
-                value = int(np.round(100*cmx[i, j], 0))
+                value = int(np.round(100*cmxs[n][i, j], 0))
 
                 text = ax.text(j+0.5, 
                                i+0.5, 
@@ -836,27 +981,8 @@ def cmx_tf(models, test_batches, num_of_batches_test):
                                va="center", 
                                color="orangered", 
                                fontsize = 20)
-
-        plt.show()
-
-
-
-        # # Print P(signal|signal) and P(signal|background)
-        # pss = cmx[1,1] / (cmx[1,1]+cmx[1,0])
-        # pbs = 1 - pss
-        # psb = cmx[0,1] / (cmx[0,1]+cmx[0,0])
-        # pbb = 1 - psb
-        # precision = cmx[1,1] / (cmx[1,1]+cmx[0,1])
-        # recall = cmx[1,1] / (cmx[1,1]+cmx[1,0])
-        # print('\n')
-        # print('P(signal|signal) = {:.0f}%'.format(100*pss))
-        # print('P(signal|background) = {:.0f}%'.format(100*psb)) 
-        # print('P(background|background) = {:.0f}%'.format(100*pbb))
-        # print('P(background|signal) = {:.0f}%'.format(100*pbs))
-        # print('Precision = {:.0f}'.format(precision*100))
-        # print('Recall = {:.0f}'.format(recall*100))
-        # print('\n')
-                    
+        plt.axis("off")
+    plt.show()                   
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -870,155 +996,8 @@ def cmx_tf(models, test_batches, num_of_batches_test):
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  
 def create_dataset_sklearn(file, pixels=40, R=1.5):
-    '''
-    Takes dat file of events
-    Labels events (background = 0, signal = 1)
-    Preprocessed events and turns into images
-    Returns 2d array where rows: events and columns: (image, label) 
-    '''
-
-    image = np.zeros((pixels, pixels))                           # Define initial image
-    data = np.zeros((pixels, pixels)) 
- 
-    
-    with open(file) as infile:
-        for line in infile:
-
-            # Preprocessing
-            event = line.strip().split()
-            event = pd.Series(event)                         # Turn into Series
-            event = preprocess(event)                        # Preprocess
-            max1 = find_max1(event)                          # Extract maxima
-            event = center(event, max1)                      # Center 
-            max2 = find_max2(event)                          # Extract maxima
-            event = rotate(event, max2)                      # Rotate 
-            max3 = find_max3(event)                          # Extract maxima
-            event = flip(event, max3)                        # Flip 
-            event = create_image(event, pixels=pixels, R=R)  # Create image
-            image = event                                    # Rename
-            #image /= np.sum(image)
-            #image /= np.amax(image)                          # Normalise final image between 0 and 1
-            #image = np.log(image)                            # Log image
-            
-            event=max1=max2=max3=None
-            
-            data = np.concatenate((data, image))
-            
-            
-    for i in range(40):
-        data = np.delete(data, i, axis=0)
-    return data
-
-
-
-                    
-                    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                    
-                    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-def create_dataset_CNN(file, pixels=40, R=1.5):
-    '''
-    Takes dat file of events
-    Labels events (background = 0, signal = 1)
-    Preprocessed events and turns into images
-    Returns 2d array where rows: events and columns: (image, label) 
-    '''
-
-    image = np.zeros((pixels, pixels))                           # Define initial image
-    data = np.zeros((pixels, pixels)) 
- 
-    
-    with open(file) as infile:
-        for line in infile:
-
-            # Preprocessing
-            event = line.strip().split()
-            event = pd.Series(event)                         # Turn into Series
-            event = preprocess(event)                        # Preprocess
-            max1 = find_max1(event)                          # Extract maxima
-            event = center(event, max1)                      # Center 
-            max2 = find_max2(event)                          # Extract maxima
-            event = rotate(event, max2)                      # Rotate 
-            max3 = find_max3(event)                          # Extract maxima
-            event = flip(event, max3)                        # Flip 
-            event = create_image(event, pixels=pixels, R=R)  # Create image
-            image = event                                    # Rename
-            image /= np.sum(image)
-            #image /= np.amax(image)                          # Normalise final image between 0 and 1
-            #image = np.log(image)                            # Log image
-            
-            event=max1=max2=max3=None
-            
-            data = np.concatenate((data, image))
-            
-            
-    for i in range(40):
-        data = np.delete(data, i, axis=0)
-    return data
-
-
-
-                    
-                    
-                    
-                    
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-def create_dataset(file, pixels=40, R=1.5):
     '''
     Takes dat file of events
     Labels events (background = 0, signal = 1)
@@ -1063,6 +1042,89 @@ def create_dataset(file, pixels=40, R=1.5):
     
     data = np.delete(data, 0, axis=0)
     return data
+'''
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING
+
+
+'''
+
    
                     
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
