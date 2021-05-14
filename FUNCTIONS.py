@@ -1041,6 +1041,10 @@ def learning_curve_sklearn(models, train_examples, train_labels, val_examples, v
         plt.ylabel('Training Time (minutes)')
         plt.title('{} - Training Time'.format(model.__class__.__name__))
         plt.show()
+        
+        print("Proportions:", props)
+        print("Accuracy: {}".format(accuracy))
+        print("Time: {}".format(times))
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1202,11 +1206,41 @@ PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESSING PREPROCESS
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+def average_image_un(pixels=60, R=1.5, event_no=12178, display=False, file='data/dataset_s_100k.dat'):
+    '''
+    Reads events directly from a file and creates an average image of the events. 
+    
+    pixels: int. Image Resolution
+    R: float. Fat jet radius
+    event_no: int/list. Number of events for which images are created. If int, then single image (faster). If list, then multiple images (slower)
+    display: boolean. Indicates whether images should be displayed automatically (return null) or returned as an ndarray. 
+    '''
+
+    image = np.zeros((pixels, pixels))                           # Define initial image
+    a = 0                                                        # Define Counter
+    
+    
+    #Return single image
+    if type(event_no) == int:
+        
+        with open(file) as infile:
+            for line in infile:
+
+                event = line.strip().split()
+                event = pd.Series(event)                         # Turn into Series
+                event = preprocess(event)                        # Preprocess 
+                event = create_image(event, pixels=pixels, R=R)  # Create image
+                image += event                                   # Add event image to average image
+                #image /= np.amax(image)                          # Normalise final image between 0 and 1
+                event=max1=max2=max3=None                            # Delete from memory
+
+                a += 1
+                if a == event_no:                                 # Break if max sample size for average image is exceeded 
+                    return image
 
 
 
-
-def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='dataset_background.dat'):
+def average_image(pixels=60, R=1.5, event_no=12178, display=False, file='data/dataset_s_100k.dat'):
     '''
     Reads events directly from a file and creates an average image of the events. 
     
